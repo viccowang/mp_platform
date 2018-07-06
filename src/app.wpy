@@ -1,0 +1,53 @@
+<style lang="scss">
+@import 'assets/weui/weui.wxss';
+@import 'assets/font/iconfont';
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+import { setStore } from 'wepy-redux'
+import * as settings from '@/config'
+import ajax from '@/plugins/api'
+import requesInterceptor from '@/plugins/request'
+import configStore from '@/plugins/store'
+
+const store = configStore()
+setStore(store)
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index'
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    }
+  }
+
+  constructor () {
+    super()
+    this.use('requestfix')
+    // 注册全局请求拦截器
+    this.intercept('request', requesInterceptor)
+    // 在wepy.page类里配置两个自定义属性，生成全局变量
+    wepy.page.prototype.$ajax = ajax
+    wepy.page.prototype.$settings = settings
+  }
+
+  onLaunch() {
+  }
+}
+</script>
