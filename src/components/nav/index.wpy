@@ -1,0 +1,40 @@
+<template>
+    <view class="navigation">
+        <view class="nav-header"></view>
+        <view class="nav-list">
+            <view class="nav-item">MENU One</view>
+            <view class="nav-item">MENU Two</view>
+            <view class="nav-item">MENU Three</view>
+            <view class="nav-item">MENU Four</view>
+        </view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Navigation extends wepy.component {
+
+}
+</script>
+
+<style lang="scss">
+.navigation {
+    font-weight:200;
+
+    .nav-header {
+        height:200rpx;
+    }
+
+    .nav-list {
+        display: flex;
+        flex-direction: column;
+        
+        .nav-item {
+            padding:35rpx 0 35rpx 35rpx;
+            font-size:30rpx;
+        }
+
+    }
+}
+</style>

@@ -1,24 +1,30 @@
 <template>
   <view class="page">
-    <view class="header">
-      <image class="logo" src="/assets/logo/logo@3x.png" />
+    <view class="nav-page">
+      <Navigation />
     </view>
-    <view class="content">
-      <text class="static">Hello World!</text>
-      <text class="state-text">{{ userInfo.userName }}</text>
-      <view class="state-input">
-        <input value="{{username}}" type="text" class="weui-input" @blur="setUserName" placeholder="change a name with state" />
+    <view class="nav-mask {{ isNavOpen ? 'slide-right' : '' }}" wx:if="{{isNavOpen}}" @tap="slideNav" />
+    <view class="main-page {{ isNavOpen ? 'slide-right' : '' }}">
+      <view class="header">
+        <image class="logo" src="/assets/logo/logo@3x.png" @tap="slideNav" />
       </view>
-      <view class="buttons">
-        <button size="mini" type="primary" @tap="setUserInfo">rename</button>
-        <button size="mini" type="default" open-type="share">share</button>
-      </view>
-    </view>
-    <view class="weui-footer footer">
-        <view class="weui-footer__text">
-          <text>Copyright &#32;&#169; </text>
-          <text @tap="showDev">Designed by Vicco W.</text>
+      <view class="content">
+        <text class="static">Hello World!</text>
+        <text class="state-text">{{ userInfo.userName }}</text>
+        <view class="state-input">
+          <input value="{{username}}" type="text" class="weui-input" @input="setUserName" placeholder="change a name with state" />
         </view>
+        <view class="buttons">
+          <button size="mini" type="primary" @tap="setUserInfo">rename</button>
+          <button size="mini" type="default" open-type="share">share</button>
+        </view>
+      </view>
+      <view class="weui-footer footer">
+          <view class="weui-footer__text">
+            <text>Copyright &#32;&#169; </text>
+            <text @tap="showDev">Designed by Vicco W.</text>
+          </view>
+      </view>
     </view>
   </view>
 </template>
@@ -28,6 +34,8 @@
   import { connect, getStore } from 'wepy-redux'
   import { SET_USER_INFO } from '@/service/store/types/platform'
   import platformMixin from '@/plugins/mixins/platform'
+  // com
+  import Navigation from '@/components/nav/index'
 
   @connect({
     userInfo (state) {
@@ -40,18 +48,23 @@
     }
 
     components = {
+      Navigation
     }
 
     mixins = [platformMixin]
 
     data = {
-      username: ''
+      username: '',
+      isNavOpen: false
     }
 
     computed = {
     }
 
     methods = {
+      slideNav () {
+        this.isNavOpen = !this.isNavOpen
+      },
       setUserName (e) {
         const name = e.detail.value.trim()
         this.username = name
@@ -77,8 +90,12 @@
     }
 
     async onLoad() {
-      const res = await this.$ajax['menu.list']()
-      console.log('result:', res)
+      try {
+        const res = await this.$ajax['menu.list']()
+        console.log('result:', res)
+      } catch (error) {
+        console.warn(error)
+      }
     }
 
     // 转发分享
@@ -101,46 +118,83 @@
 .page {
   width:100%;
   height:100vh;
+  overflow: hidden;
+  position:relative;
 
-  .header{
-    display: flex;
-    justify-content: center;
-    margin: 150rpx 0 100rpx 0;
-
-    .logo {
-      width: 264rpx;
-      height:169rpx;
-    }
-  }
-
-  .content {
-    padding:0 80rpx;
-    font-weight: 200;
-
-    .static { margin: 15rpx 0; }
-
-    .state-text { margin-left:15rpx; font-weight: bold; }
-
-    .state-input {
-      margin: 25rpx 0;
-      padding: 0 10rpx;
-      border: 1px solid #cbcbcb;
-      border-radius:5px;
-      font-size: 28rpx;
-    }
-
-    .buttons {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-  }
-
-  .footer {
-    width:100%;
+  .nav-page,
+  .nav-mask,
+  .main-page {
     position:absolute;
-    bottom: 80rpx;
+    width:100%;
+    height:100vh;
   }
+
+  .nav-page {
+    background:#394269;
+    color: #fff;
+    z-index:1;
+  }
+
+  .nav-mask {
+    // background:black;
+    opacity:0;
+    z-index:15;
+  }
+
+  .slide-right{
+    transform: scale(0.8) translate(60%, 0)
+  }
+  
+  .main-page {
+    z-index:10;
+    background:#f2f2f2;
+    transition: all .3s ease 0s;
+
+    .header{
+      display: flex;
+      padding:150rpx 0 50rpx 0;
+      justify-content: center;
+
+      .logo {
+        width: 264rpx;
+        height:169rpx;
+      }
+    }
+
+    .content {
+      padding:0 80rpx;
+      font-weight: 200;
+
+
+      .static { margin: 15rpx 0; }
+
+      .state-text { margin-left:15rpx; font-weight: bold; }
+
+      .state-input {
+        margin: 25rpx 0;
+        padding: 0 10rpx;
+        border: 1px solid #cbcbcb;
+        background-color:#fff;
+        border-radius:5px;
+        font-size: 28rpx;
+      }
+
+      .buttons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+    }
+
+    .footer {
+      width:100%;
+      position:absolute;
+      bottom: 80rpx;
+    }
+
+  }
+
+  
 }
 </style>

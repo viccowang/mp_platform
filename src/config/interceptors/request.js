@@ -56,5 +56,5 @@ export function requestResponseSucessFunc (response) {
 }
 
 export function requestResponseFailFunc (error) {
-  return Promise.reject(error)
+  return Promise.reject(error).catch(err => { console.warn(err) })
 }
