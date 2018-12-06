@@ -1,8 +1,14 @@
 import { handleActions } from 'redux-actions'
-import { SET_USER_INFO } from '../types'
+import { SET_USER_INFO, SET_NAVIGATION_SHOW_STATE } from '../types'
 import _assign from 'lodash'
 
 export default handleActions({
+  [SET_NAVIGATION_SHOW_STATE] (state, action) {
+    return {
+      ...state,
+      navigationShowState: action.payload
+    }
+  },
   [SET_USER_INFO] (state, action) {
     return {
       ...state,
@@ -12,6 +18,7 @@ export default handleActions({
 },
   {
     // init props
+    navigationShowState: false,
     userInfo: {
       userName: 'Your name'
     }

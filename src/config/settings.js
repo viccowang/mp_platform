@@ -8,14 +8,14 @@
 /**
   * 全局项目名称配置
   */
- export const PLATFORM_PERFIX_NAME = 'ZVP'
+ export const PLATFORM_PERFIX_NAME = 'MiniProgramPF'
 
  /**
    * API接口默认参数配置
    */
  export const API_DEFAULT_CONFIG = {
-  //  mockBaseUrl: 'http://192.168.10.241:3000/mock/144',
-   mockBaseUrl: 'http://192.168.3.108:3000/mock/18',
+   mockBaseUrl: 'http://192.168.10.241:3000/mock/144',
+  //  mockBaseUrl: 'http://192.168.3.108:3000/mock/18',
    prodBaseUrl: 'http://117.34.118.17:8083',
    isMocked: true,
    isDebug: true,

@@ -1,28 +1,9 @@
-<style lang="scss">
-@import 'assets/weui/weui.wxss';
-@import 'assets/font/iconfont';
-
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-}
-</style>
-
 <script>
 import wepy from 'wepy'
 import 'wepy-async-function'
 import { setStore } from 'wepy-redux'
-import * as settings from '@/config'
-import ajax from '@/plugins/api'
-import requesInterceptor from '@/plugins/request'
+import Injection from '@/plugins/inject'
 import configStore from '@/plugins/store'
-
-const store = configStore()
-setStore(store)
 
 export default class extends wepy.app {
   config = {
@@ -39,15 +20,31 @@ export default class extends wepy.app {
 
   constructor () {
     super()
+    // store configuration
+    this.$store = configStore()
+    setStore(this.$store)
+    // request plugin
     this.use('requestfix')
-    // 注册全局请求拦截器
-    this.intercept('request', requesInterceptor)
-    // 在wepy.page类里配置两个自定义属性，生成全局变量
-    wepy.page.prototype.$ajax = ajax
-    wepy.page.prototype.$settings = settings
+    // 启用 Promise / Async,await调用API
+    this.use('promisify')
+    // 注入全局对象
+    Injection.inject(this)
   }
 
   onLaunch() {
   }
 }
 </script>
+<style lang="scss">
+@import 'assets/weui/weui.wxss';
+@import 'assets/font/iconfont';
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+</style>

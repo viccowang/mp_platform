@@ -1,7 +1,7 @@
 {
-  "name": "customization_bus_wmp",
+  "name": "miniprogram_platform",
   "version": "0.0.2",
-  "description": "a customization bus program build on wechat mini program",
+  "description": "a platform build on wechat mini program",
   "main": "dist/app.js",
   "scripts": {
     "dev": "wepy build --watch",
@@ -22,6 +22,7 @@
     "redux": "^3.7.2",
     "redux-actions": "^2.2.1",
     "redux-promise": "^0.5.3",
+    "vue-cookie": "^1.1.4",
     "wepy": "^1.6.0",
     "wepy-async-function": "^1.4.4",
     "wepy-com-toast": "^1.0.2",

@@ -1,0 +1,130 @@
+<template>
+    <view class="main-page">
+      <view class="nav-mask" wx:if="{{navigationShowState}}" @tap="slideNav" />
+      <view class="header">
+        <image class="logo" src="/assets/logo/logo@3x.png" @tap="slideNav" />
+      </view>
+      <view class="content">
+        <text class="static">Hello World!</text>
+        <text class="state-text">{{ userInfo.userName }}</text>
+        <view class="state-input">
+          <input value="{{username}}" type="text" class="weui-input" @input="setUserName" placeholder="change a name with state" />
+        </view>
+        <view class="buttons">
+          <button size="mini" type="primary" @tap="setUserInfo">rename</button>
+          <button size="mini" type="default" open-type="share">share</button>
+        </view>
+      </view>
+      <view class="weui-footer footer">
+          <view class="weui-footer__text">
+            <text>Copyright &#32;&#169; </text>
+            <text @tap="showDev">Designed by Vicco W.</text>
+          </view>
+      </view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { connect, getStore } from 'wepy-redux'
+import { SET_USER_INFO, SET_NAVIGATION_SHOW_STATE } from '@/service/store/types/platform'
+
+const store = getStore()
+
+@connect({
+  navigationShowState (state) {
+    return state.platform.navigationShowState
+  },
+  userInfo (state) {
+    return state.platform.userInfo
+  }
+})
+export default class Homepage extends wepy.component {
+  methods = {
+    slideNav () {
+      store.dispatch({
+        type: SET_NAVIGATION_SHOW_STATE,
+        payload: !this.navigationShowState
+      })
+    },
+    setUserName (e) {
+      const name = e.detail.value.trim()
+      this.username = name
+    },
+    setUserInfo () {
+      if (this.username === '') {
+        wepy.showToast({
+          title: '请输入一个名字',
+          icon: 'none'
+        })
+      } else {
+        const store = getStore()
+        store.dispatch({
+          type: SET_USER_INFO,
+          payload: {userName: this.username}
+        })
+        this.username = ''
+      }
+    }
+  }
+}
+</script>
+
+<style lang="less">
+.main-page {
+    width:100%;
+    height:100vh;
+    position: relative;
+
+    .nav-mask {
+        width:100%;
+        height:100vh;
+        position: absolute;
+        z-index:15;
+    }
+
+    .header{
+        display: flex;
+        padding:150rpx 0 50rpx 0;
+        justify-content: center;
+
+        .logo {
+            width: 264rpx;
+            height:169rpx;
+        }
+    }
+
+    .content {
+        padding:0 80rpx;
+        font-weight: 200;
+
+
+        .static { margin: 15rpx 0; }
+
+        .state-text { margin-left:15rpx; font-weight: bold; }
+
+        .state-input {
+            margin: 25rpx 0;
+            padding: 0 10rpx;
+            border: 1px solid #cbcbcb;
+            background-color:#fff;
+            border-radius:5px;
+            font-size: 28rpx;
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        }
+
+        .footer {
+        width:100%;
+        position:absolute;
+        bottom: 80rpx;
+        }
+
+}
+</style>

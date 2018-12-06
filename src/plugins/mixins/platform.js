@@ -11,6 +11,6 @@ export default class PlatformMixin extends wepy.mixin {
   }
 
   onLoad() {
-    console.log('mixin onLoad')
+    // console.log('mixin onLoad')
   }
 }

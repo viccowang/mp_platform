@@ -7,6 +7,6 @@
 
 import * as GlobalSettings from './settings'
 
-export {
-    GlobalSettings
+export default {
+  GlobalSettings
 }

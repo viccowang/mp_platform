@@ -14,7 +14,8 @@
 import wepy from 'wepy'
 
 export default class Navigation extends wepy.component {
-
+  onLoad () {
+  }
 }
 </script>
 

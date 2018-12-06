@@ -3,116 +3,73 @@
     <view class="nav-page">
       <Navigation />
     </view>
-    <view class="nav-mask {{ isNavOpen ? 'slide-right' : '' }}" wx:if="{{isNavOpen}}" @tap="slideNav" />
-    <view class="main-page {{ isNavOpen ? 'slide-right' : '' }}">
-      <view class="header">
-        <image class="logo" src="/assets/logo/logo@3x.png" @tap="slideNav" />
-      </view>
-      <view class="content">
-        <text class="static">Hello World!</text>
-        <text class="state-text">{{ userInfo.userName }}</text>
-        <view class="state-input">
-          <input value="{{username}}" type="text" class="weui-input" @input="setUserName" placeholder="change a name with state" />
-        </view>
-        <view class="buttons">
-          <button size="mini" type="primary" @tap="setUserInfo">rename</button>
-          <button size="mini" type="default" open-type="share">share</button>
-        </view>
-      </view>
-      <view class="weui-footer footer">
-          <view class="weui-footer__text">
-            <text>Copyright &#32;&#169; </text>
-            <text @tap="showDev">Designed by Vicco W.</text>
-          </view>
-      </view>
+    <view class="home-page {{ navigationShowState ? 'slide-right': ''}}">
+      <Homepage />
     </view>
   </view>
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import { connect, getStore } from 'wepy-redux'
-  import { SET_USER_INFO } from '@/service/store/types/platform'
-  import platformMixin from '@/plugins/mixins/platform'
-  // com
-  import Navigation from '@/components/nav/index'
+import wepy from 'wepy'
+import { connect } from 'wepy-redux'
+import platformMixin from '@/plugins/mixins/platform'
+// com
+import Navigation from '@/components/nav/index'
+import Homepage from '@/components/home/index'
 
-  @connect({
-    userInfo (state) {
-      return state.platform.userInfo
-    }
-  })
-  export default class Index extends wepy.page {
-    config = {
-      navigationBarTitleText: 'VM Platform Home'
-    }
+@connect({
+  navigationShowState (state) {
+    return state.platform.navigationShowState
+  }
+})
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: 'VM Platform Home'
+  }
 
-    components = {
-      Navigation
-    }
+  components = {
+    Navigation,
+    Homepage
+  }
 
-    mixins = [platformMixin]
+  mixins = [platformMixin]
 
-    data = {
-      username: '',
-      isNavOpen: false
-    }
+  data = {
+  }
 
-    computed = {
-    }
+  computed = {
+  }
 
-    methods = {
-      slideNav () {
-        this.isNavOpen = !this.isNavOpen
-      },
-      setUserName (e) {
-        const name = e.detail.value.trim()
-        this.username = name
-      },
-      setUserInfo () {
-        if (this.username === '') {
-          wepy.showToast({
-            title: '请输入一个名字',
-            icon: 'none'
-          })
-        } else {
-          const store = getStore()
-          store.dispatch({
-            type: SET_USER_INFO,
-            payload: {userName: this.username}
-          })
-          this.username = ''
-        }
-      }
-    }
+  methods = {
+  }
 
-    events = {
-    }
+  events = {
+  }
 
-    async onLoad() {
-      try {
-        const res = await this.$ajax['menu.list']()
-        console.log('result:', res)
-      } catch (error) {
-        console.warn(error)
-      }
-    }
-
-    // 转发分享
-    onShareAppMessage (res) {
-      if (res.from === 'button') {
-      // 来自页面内转发按钮
-        console.log(res.target)
-      } else {
-        // 来自右上角菜单
-        console.log(res)
-      }
-      return {
-        title: 'This is a share test!',
-        path: '/page/index'
-      }
+  async onLoad() {
+    try {
+      const res = await this.$ajax['menu.list']()
+      console.log('result:', res)
+    } catch (error) {
+      console.warn(error)
     }
   }
+
+  // 转发分享
+  onShareAppMessage (res) {
+    if (res.from === 'button') {
+    // 来自页面内转发按钮
+      console.log(res.target)
+    } else {
+      // 来自右上角菜单
+      console.log(res)
+    }
+    return {
+      title: 'This is a share test!',
+      path: '/page/index'
+    }
+  }
+}
 </script>
 <style lang="scss">
 .page {
@@ -122,8 +79,7 @@
   position:relative;
 
   .nav-page,
-  .nav-mask,
-  .main-page {
+  .home-page {
     position:absolute;
     width:100%;
     height:100vh;
@@ -135,66 +91,15 @@
     z-index:1;
   }
 
-  .nav-mask {
-    // background:black;
-    opacity:0;
-    z-index:15;
-  }
-
-  .slide-right{
-    transform: scale(0.8) translate(60%, 0)
-  }
-  
-  .main-page {
+  .home-page {
+    background-color: #f2f2f2;
     z-index:10;
-    background:#f2f2f2;
     transition: all .3s ease 0s;
 
-    .header{
-      display: flex;
-      padding:150rpx 0 50rpx 0;
-      justify-content: center;
-
-      .logo {
-        width: 264rpx;
-        height:169rpx;
-      }
+    &.slide-right{
+      transform: scale(0.8) translate(60%, 0)
     }
-
-    .content {
-      padding:0 80rpx;
-      font-weight: 200;
-
-
-      .static { margin: 15rpx 0; }
-
-      .state-text { margin-left:15rpx; font-weight: bold; }
-
-      .state-input {
-        margin: 25rpx 0;
-        padding: 0 10rpx;
-        border: 1px solid #cbcbcb;
-        background-color:#fff;
-        border-radius:5px;
-        font-size: 28rpx;
-      }
-
-      .buttons {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-    }
-
-    .footer {
-      width:100%;
-      position:absolute;
-      bottom: 80rpx;
-    }
-
   }
-
   
 }
 </style>
